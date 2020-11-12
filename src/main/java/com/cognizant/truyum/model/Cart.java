@@ -3,6 +3,12 @@ package com.cognizant.truyum.model;
 import java.util.List;
 
 public class Cart {
+	public Cart() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
 	private List<MenuItem> menuItemList;
 	private double total;
 

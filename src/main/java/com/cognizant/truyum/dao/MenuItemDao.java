@@ -8,4 +8,5 @@ public interface MenuItemDao {
 	public List<MenuItem> getMenuItemListCustomer();
 	public void modifyMenuItem(MenuItem menuItem);
 	public MenuItem getMenuItem(long menuItemId);
+	
 }

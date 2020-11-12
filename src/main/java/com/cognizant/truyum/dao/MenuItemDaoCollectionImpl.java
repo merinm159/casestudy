@@ -1,42 +1,51 @@
 package com.cognizant.truyum.dao;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import com.cognizant.truyum.model.MenuItem;
-import com.cognizant.truyum.util.DateUtil;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.stereotype.Component;
+
+import com.cognizant.truyum.model.MenuItem;
+
+@Component("menuItemDao")
+@ImportResource("classpath:spring-config.xml")
 public class MenuItemDaoCollectionImpl implements MenuItemDao {
+	@Autowired
 	private List<MenuItem> menuItemList;
 
-	
+	public List<MenuItem> getMenuItemList() {
+		return menuItemList;
+	}
+
+	public void setMenuItemList(final List<MenuItem> menuItemList) {
+		this.menuItemList = menuItemList;
+	}
+
 	@Override
 	public List<MenuItem> getMenuItemListAdmin() {
-		// TODO Auto-generated method stub
 		return menuItemList;
 	}
 
 	@Override
 	public List<MenuItem> getMenuItemListCustomer() {
-		List<MenuItem> m = new ArrayList<MenuItem>();
-//		Date currentdate = Calendar.getInstance().getTime();  
-//		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
-//      String strDate = dateFormat.format(currentdate); 
-//		LocalDate currentdate=LocalDate.now();
-//		Date current=new DateUtil().convertToDate(currentdate);
-		Date strDate = new DateUtil().convertToDate("23/10/2020");
+		List<MenuItem> customermenu = new ArrayList<MenuItem>();
+		Date current = new Date();
 		for (MenuItem menuItem : menuItemList) {
-			if (menuItem.getDateOfLaunch().before(strDate) || menuItem.getDateOfLaunch().equals(strDate)) {
-				m.add(menuItem);
+			if (menuItem.getDateOfLaunch().getTime() <= current.getTime() && menuItem.isActive()) {
+				customermenu.add(menuItem);
 			}
 		}
-		return m;
+
+		return customermenu;
+
 	}
 
 	@Override
 	public void modifyMenuItem(MenuItem menuItem) {
-		
+
 		for (MenuItem m : menuItemList) {
 			if (menuItem.equals(m)) {
 				m.setId(menuItem.getId());
@@ -46,15 +55,17 @@ public class MenuItemDaoCollectionImpl implements MenuItemDao {
 				m.setDateOfLaunch(menuItem.getDateOfLaunch());
 				m.setCategory(menuItem.getCategory());
 				m.setFreeDelivery(menuItem.isFreeDelivery());
+				  return;
 			}
-			
+
 		}
+		 menuItemList.add(menuItem);
 	}
 
 	@Override
 	public MenuItem getMenuItem(long menuItemId) {
 		for (MenuItem menuItem : menuItemList) {
-			if(menuItem.getId()==menuItemId)
+			if (menuItem.getId() == menuItemId)
 				return menuItem;
 		}
 		return null;
